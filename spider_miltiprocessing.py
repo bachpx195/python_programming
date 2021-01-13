@@ -1,4 +1,4 @@
-from multiprocessing import pool
+from multiprocessing import Pool
 import bs4 as bs
 import random
 import requests
@@ -55,3 +55,20 @@ def get_links(url):
         print(str(e))
         # log this error
         return []
+
+
+def main():
+    how_many = 50
+    p = Pool(processes=how_many)
+    parse_us = [random_starting_url() for _ in range(how_many)]
+
+    data = p.map(get_links, [link for link in parse_us])
+    data = [url for url_list in data for url in url_list]
+    p.close()
+
+    with open('urls.txt', 'w') as f:
+        f.write(str(data))
+
+
+if __name__ == '__main__':
+    main()
